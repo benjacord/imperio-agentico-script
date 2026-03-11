@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Imperio Ag&eacute;ntico - Script de Ventas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--surface:#111;--surface2:#1a1a1a;--gold:#D4AF37;--gold-dim:#b8962e;--gold-glow:rgba(212,175,55,0.15);--text:#f0f0f0;--text-dim:#999;--text-mid:#ccc;--radius:12px;--max-w:820px}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);line-height:1.7;-webkit-font-smoothing:antialiased}
+
+/* Progress bar */
+#progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,var(--gold),#f5d76e);z-index:1000;transition:width .25s ease;width:0}
+
+/* Desktop sidebar nav */
+.sidebar{display:none}
+@media(min-width:900px){
+  .sidebar{display:flex;flex-direction:column;position:fixed;left:0;top:0;bottom:0;width:240px;background:#080808;border-right:1px solid #1f1f1f;padding:24px 16px;z-index:100;gap:4px;overflow-y:auto}
+  .sidebar .logo{font-size:14px;font-weight:700;color:var(--gold);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;padding:8px;border-bottom:1px solid #1f1f1f}
+  .sidebar a{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;text-decoration:none;color:var(--text-dim);font-size:13px;font-weight:500;transition:all .2s}
+  .sidebar a:hover,.sidebar a.active{background:var(--gold-glow);color:var(--gold)}
+  .sidebar a .num{font-size:11px;font-weight:700;color:var(--gold);background:rgba(212,175,55,0.12);width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  main{margin-left:240px}
+}
+
+/* Mobile tabs */
+.mobile-tabs{display:flex;position:fixed;top:3px;left:0;right:0;z-index:99;background:#080808ee;backdrop-filter:blur(12px);border-bottom:1px solid #1f1f1f;overflow-x:auto;gap:0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.mobile-tabs::-webkit-scrollbar{display:none}
+.mobile-tabs a{flex-shrink:0;padding:12px 16px;text-decoration:none;color:var(--text-dim);font-size:12px;font-weight:600;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.mobile-tabs a.active{color:var(--gold);border-bottom-color:var(--gold)}
+@media(min-width:900px){.mobile-tabs{display:none}}
+
+/* Main content */
+main{max-width:var(--max-w);margin:0 auto;padding:70px 20px 120px}
+@media(min-width:900px){main{padding:40px 40px 120px}}
+
+/* Section */
+.section{margin-bottom:64px;padding-top:8px}
+.section-header{display:flex;align-items:center;gap:14px;margin-bottom:28px}
+.section-num{font-size:28px;font-weight:800;color:var(--gold);background:rgba(212,175,55,0.1);width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:1px solid rgba(212,175,55,0.2)}
+.section-title{font-size:22px;font-weight:700;color:var(--text)}
+.section-time{font-size:13px;color:var(--gold-dim);font-weight:500;margin-top:2px}
+.section-subtitle{font-size:15px;color:var(--text-mid);margin-bottom:20px;font-weight:400}
+
+/* Sub-section label */
+.sub-label{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--gold);margin:32px 0 14px;display:flex;align-items:center;gap:8px}
+.sub-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(212,175,55,0.3),transparent)}
+
+/* Blockquote - what to say */
+.say{background:var(--surface);border-left:3px solid var(--gold);border-radius:0 var(--radius) var(--radius) 0;padding:18px 22px;margin:12px 0 18px;font-size:15px;line-height:1.8;color:var(--text);position:relative}
+.say::before{content:'"';position:absolute;top:8px;left:10px;font-size:32px;color:var(--gold);opacity:.3;font-family:Georgia,serif}
+.say p{padding-left:8px}
+.say .placeholder{color:var(--gold);font-weight:600}
+
+/* Question cards */
+.question-card{background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid #2a2a2a;border-radius:var(--radius);padding:18px 22px;margin:10px 0;display:flex;align-items:flex-start;gap:14px;transition:border-color .2s}
+.question-card:hover{border-color:var(--gold-dim)}
+.question-card .q-icon{font-size:18px;flex-shrink:0;margin-top:2px}
+.question-card .q-text{font-size:15px;color:var(--text);font-weight:500}
+
+/* Tip/note box */
+.tip{background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.12);border-radius:var(--radius);padding:14px 18px;margin:16px 0;display:flex;align-items:flex-start;gap:12px;font-size:13px;color:var(--text-mid);line-height:1.6}
+.tip .tip-icon{font-size:16px;flex-shrink:0;margin-top:1px}
+
+/* Timeline (section 0) */
+.timeline{display:flex;flex-direction:column;gap:0;margin:20px 0}
+.timeline-item{display:flex;gap:16px;padding:16px 0;border-left:2px solid #2a2a2a;margin-left:12px;padding-left:20px;position:relative}
+.timeline-item::before{content:'';position:absolute;left:-6px;top:20px;width:10px;height:10px;border-radius:50%;background:var(--gold);border:2px solid var(--bg)}
+.timeline-item .t-time{font-size:13px;font-weight:700;color:var(--gold);min-width:70px;flex-shrink:0}
+.timeline-item .t-label{font-size:15px;color:var(--text);font-weight:500}
+
+/* Deliverables list */
+.deliverables{list-style:none;padding:0;margin:12px 0}
+.deliverables li{padding:10px 0 10px 28px;position:relative;font-size:15px;color:var(--text-mid);border-bottom:1px solid #1a1a1a}
+.deliverables li::before{content:'';position:absolute;left:0;top:16px;width:16px;height:16px;border-radius:4px;background:rgba(212,175,55,0.15);border:1px solid var(--gold)}
+.deliverables li::after{content:'';position:absolute;left:4px;top:20px;width:8px;height:5px;border-left:2px solid var(--gold);border-bottom:2px solid var(--gold);transform:rotate(-45deg)}
+.deliverables li:last-child{border-bottom:none}
+
+/* Next section button */
+#next-btn{position:fixed;bottom:24px;right:24px;background:linear-gradient(135deg,var(--gold),var(--gold-dim));color:#000;border:none;padding:14px 24px;border-radius:50px;font-family:'Inter',sans-serif;font-size:14px;font-weight:700;cursor:pointer;z-index:100;box-shadow:0 4px 24px rgba(212,175,55,0.3);transition:all .2s;display:flex;align-items:center;gap:8px}
+#next-btn:hover{transform:translateY(-2px);box-shadow:0 6px 32px rgba(212,175,55,0.4)}
+#next-btn svg{width:16px;height:16px}
+
+/* Silence indicator */
+.silence{text-align:center;padding:20px;margin:16px 0;border:1px dashed rgba(212,175,55,0.3);border-radius:var(--radius);color:var(--gold);font-size:14px;font-weight:600;letter-spacing:1px}
+
+/* Guarantee box */
+.guarantee{background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(212,175,55,0.02));border:1px solid rgba(212,175,55,0.25);border-radius:16px;padding:24px;margin:20px 0;text-align:center}
+.guarantee .g-icon{font-size:32px;margin-bottom:8px}
+.guarantee .g-title{font-size:16px;font-weight:700;color:var(--gold);margin-bottom:8px}
+.guarantee .g-text{font-size:14px;color:var(--text-mid);line-height:1.7}
+
+/* Price tag */
+.price-tag{text-align:center;padding:32px;margin:20px 0;background:var(--surface);border-radius:16px;border:1px solid #2a2a2a}
+.price-tag .amount{font-size:42px;font-weight:800;color:var(--gold)}
+.price-tag .period{font-size:16px;color:var(--text-dim);margin-top:4px}
+.price-tag .commitment{font-size:13px;color:var(--text-dim);margin-top:8px;padding-top:12px;border-top:1px solid #2a2a2a}
+
+@media(max-width:600px){
+  .section-num{width:42px;height:42px;font-size:22px;border-radius:10px}
+  .section-title{font-size:18px}
+  .say{padding:14px 16px;font-size:14px}
+  .price-tag .amount{font-size:32px}
+  main{padding-top:56px}
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- Mobile tabs -->
+<nav class="mobile-tabs" id="mobileTabs">
+  <a href="#s0" class="active">0. Estructura</a>
+  <a href="#s1">1. Apertura</a>
+  <a href="#s2">2. Diagn&oacute;stico</a>
+  <a href="#s3">3. Transici&oacute;n</a>
+  <a href="#s4">4. Plan</a>
+  <a href="#s5">5. Cierre</a>
+</nav>
+
+<!-- Desktop sidebar -->
+<nav class="sidebar" id="sidebar">
+  <div class="logo">Imperio Ag&eacute;ntico</div>
+  <a href="#s0" class="active"><span class="num">0</span>Estructura</a>
+  <a href="#s1"><span class="num">1</span>Apertura y frame</a>
+  <a href="#s2"><span class="num">2</span>Diagn&oacute;stico</a>
+  <a href="#s3"><span class="num">3</span>Transici&oacute;n</a>
+  <a href="#s4"><span class="num">4</span>Presentar plan</a>
+  <a href="#s5"><span class="num">5</span>Precio + cierre</a>
+</nav>
+
+<main>
+
+  <!-- SECTION 0: Estructura -->
+  <section class="section" id="s0">
+    <div class="section-header">
+      <div class="section-num">0</div>
+      <div>
+        <div class="section-title">Estructura de la llamada</div>
+        <div class="section-time">45 minutos en total</div>
+      </div>
+    </div>
+    <p class="section-subtitle">Mapa general para no perderte. Cada bloque tiene su tiempo asignado.</p>
+
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="t-time">0 - 5 min</div>
+        <div class="t-label">Contexto + frame de la llamada</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-time">5 - 30 min</div>
+        <div class="t-label">Diagn&oacute;stico profundo (ellos hablan)</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-time">30 - 40 min</div>
+        <div class="t-label">Presentar plan Imperio Ag&eacute;ntico</div>
+      </div>
+      <div class="timeline-item">
+        <div class="t-time">40 - 45 min</div>
+        <div class="t-label">Inversi&oacute;n + garant&iacute;a + cierre</div>
+      </div>
+    </div>
+
+    <div class="tip">
+      <span class="tip-icon">&#128161;</span>
+      <span>El diagn&oacute;stico es el 50% de la llamada. Si ellos no se venden solos que necesitan agentes, no avances al plan. Escucha m&aacute;s, habla menos.</span>
+    </div>
+  </section>
+
+  <!-- SECTION 1: Apertura -->
+  <section class="section" id="s1">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">Apertura y frame</div>
+        <div class="section-time">5 minutos</div>
+      </div>
+    </div>
+
+    <div class="sub-label">Rompe el hielo (1-2 min)</div>
+    <div class="question-card">
+      <span class="q-icon">&#128172;</span>
+      <span class="q-text">Pregunta casual para conectar r&aacute;pido</span>
+    </div>
+    <blockquote class="say">
+      <p>&quot;&iquest;D&oacute;nde est&aacute;s ahora? &iquest;En qu&eacute; ciudad? &iquest;C&oacute;mo va el d&iacute;a con la pega?&quot;</p>
+    </blockquote>
+
+    <div class="sub-label">Marca el frame de entrevista</div>
+    <blockquote class="say">
+      <p>&quot;Te cuento c&oacute;mo va esta llamada para que estemos alineados. Primero entiendo bien tu negocio y tus n&uacute;meros, despu&eacute;s, si veo que tiene sentido, te explico c&oacute;mo trabajamos en Imperio Ag&eacute;ntico. Y al final decidimos juntos si avanzamos o no hoy. &iquest;Te parece?&quot;</p>
+    </blockquote>
+
+    <div class="sub-label">Refuerza poder de elecci&oacute;n</div>
+    <blockquote class="say">
+      <p>&quot;No aceptamos a todo el mundo, porque montar agentes 24/7 sin base s&oacute;lida termina siendo un cacho para todos. Entonces hoy vemos si calza por ambos lados. &iquest;Te hace sentido?&quot;</p>
+    </blockquote>
+
+    <div class="tip">
+      <span class="tip-icon">&#127919;</span>
+      <span>El frame de &quot;no aceptamos a todo el mundo&quot; invierte el poder. Ellos deben calificar, no t&uacute;.</span>
+    </div>
+  </section>
+
+  <!-- SECTION 2: Diagnóstico -->
+  <section class="section" id="s2">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">Diagn&oacute;stico</div>
+        <div class="section-time">20 - 25 minutos</div>
+      </div>
+    </div>
+    <p class="section-subtitle">Objetivo: que ELLOS te vendan que necesitan agentes ya. Preguntas abiertas y escucha activa.</p>
+
+    <div class="sub-label">Negocio y oferta</div>
+    <div class="question-card">
+      <span class="q-icon">&#128188;</span>
+      <span class="q-text">Entiende qu&eacute; venden y c&oacute;mo llegan los clientes</span>
+    </div>
+    <blockquote class="say">
+      <p>&quot;Cu&eacute;ntame qu&eacute; vendes hoy y a qui&eacute;n, en versi&oacute;n simple.&quot;</p>
+    </blockquote>
+    <blockquote class="say">
+      <p>&quot;&iquest;C&oacute;mo est&aacute;s trayendo clientes ahora mismo? (canales principales)&quot;</p>
+    </blockquote>
+    <blockquote class="say">
+      <p>&quot;&iquest;Cu&aacute;nto est&aacute;n facturando promedio los &uacute;ltimos 3 meses?&quot;</p>
+    </blockquote>
+
+    <div class="sub-label">Meta 90 d&iacute;as</div>
+    <div class="question-card">
+      <span class="q-icon">&#127942;</span>
+      <span class="q-text">Haz que visualicen el &eacute;xito</span>
+    </div>
+    <blockquote class="say">
+      <p>&quot;Si todo saliera bien, &iquest;d&oacute;nde te gustar&iacute;a estar en 90 d&iacute;as en facturaci&oacute;n / clientes?&quot;</p>
+    </blockquote>
+    <blockquote class="say">
+      <p>&quot;&iquest;Qu&eacute; tendr&iacute;a que pasar para que digas 'vali&oacute; totalmente la pena montar este sistema ag&eacute;ntico'?&quot;</p>
+    </blockquote>
+
+    <div class="sub-label">Cuello de botella</div>
+    <div class="question-card">
+      <span class="q-icon">&#128683;</span>
+      <span class="q-text">Encuentra el dolor real</span>
+    </div>
+    <blockquote class="say">
+      <p>&quot;Hoy, &iquest;d&oacute;nde sientes m&aacute;s traba: conseguir leads, cerrar, entregar, o la parte operativa/manual?&quot;</p>
+    </blockquote>
+    <blockquote class="say">
+      <p>&quot;&iquest;Qu&eacute; cosas te chupan m&aacute;s tiempo a ti o a tu equipo que perfectamente podr&iacute;a hacer un agente?&quot;</p>
+    </blockquote>
+
+    <div class="sub-label">Intentos previos / riesgo</div>
+    <div class="question-card">
+      <span class="q-icon">&#9888;&#65039;</span>
+      <span class="q-text">Urgencia y costo de no actuar</span>
+    </div>
+    <blockquote class="say">
+      <p>&quot;&iquest;Qu&eacute; ya intentaste antes para resolver esto? &iquest;Qu&eacute; no funcion&oacute;?&quot;</p>
+    </blockquote>
+    <blockquote class="say">
+      <p>&quot;Si no resuelves esto en los pr&oacute;ximos 3-6 meses, &iquest;qu&eacute; pasa con el negocio?&quot;</p>
+    </blockquote>
+
+    <div class="sub-label">Cierra el diagn&oacute;stico</div>
+    <blockquote class="say">
+      <p>&quot;Ok, creo que tengo el mapa. &iquest;Te resumo lo que escuch&eacute; y t&uacute; me corriges si me equivoco?&quot;</p>
+    </blockquote>
+
+    <div class="tip">
+      <span class="tip-icon">&#128221;</span>
+      <span>Da un resumen de 30-60 segundos de lo que escuchaste y pide confirmaci&oacute;n. Esto demuestra que escuchaste y genera confianza.</span>
+    </div>
+  </section>
+
+  <!-- SECTION 3: Transición -->
+  <section class="section" id="s3">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">Transici&oacute;n al plan</div>
+        <div class="section-time">1 minuto</div>
+      </div>
+    </div>
+
+    <blockquote class="say">
+      <p>&quot;Con lo que me contaste, veo 2-3 lugares claros donde agentes 24/7 te pueden liberar horas y traer m&aacute;s clientes. Si quieres, te cuento c&oacute;mo trabajamos en Imperio Ag&eacute;ntico y te digo exactamente qu&eacute; har&iacute;amos contigo en los primeros 90 d&iacute;as.&quot;</p>
+    </blockquote>
+
+    <div class="silence">&#128263; ESPERAS &quot;S&Iacute;&quot; ANTES DE CONTINUAR</div>
+
+    <div class="tip">
+      <span class="tip-icon">&#127919;</span>
+      <span>Si no dicen &quot;s&iacute;&quot; con ganas, vuelve al diagn&oacute;stico. No presentes sin permiso expl&iacute;cito.</span>
+    </div>
+  </section>
+
+  <!-- SECTION 4: Presentar plan -->
+  <section class="section" id="s4">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-title">Presentar Imperio Ag&eacute;ntico</div>
+        <div class="section-time">10 minutos</div>
+      </div>
+    </div>
+    <p class="section-subtitle">Personaliza la columna vertebral con lo que escuchaste en el diagn&oacute;stico.</p>
+
+    <div class="sub-label">Contexto corto</div>
+    <blockquote class="say">
+      <p>&quot;Imperio Ag&eacute;ntico es el c&iacute;rculo interno de Imperio Digital para founders B2B que ya venden y quieren montar un equipo de agentes IA 24/7 dentro del negocio, no solo aprender teor&iacute;a.&quot;</p>
+    </blockquote>
+
+    <div class="sub-label">Plan 90 d&iacute;as aterrizado a su caso</div>
+    <blockquote class="say">
+      <p>&quot;En tu caso, lo que har&iacute;amos los primeros 90 d&iacute;as es:</p>
+      <p>Mapear <span class="placeholder">[proceso X, Y]</span> y montar OpenClaw + Mac Mini.</p>
+      <p>Dise&ntilde;ar 3-5 agentes: uno para <span class="placeholder">[leads]</span>, uno para <span class="placeholder">[follow-up]</span>, uno para <span class="placeholder">[reporting/ops]</span>.</p>
+      <p>Afinar hasta que est&eacute;n corriendo en producci&oacute;n y midiendo resultados.&quot;</p>
+    </blockquote>
+
+    <div class="tip">
+      <span class="tip-icon">&#9997;&#65039;</span>
+      <span>Reemplaza los <strong>[placeholders]</strong> con lo que dijeron en el diagn&oacute;stico. Mientras m&aacute;s espec&iacute;fico, m&aacute;s real se siente.</span>
+    </div>
+
+    <div class="sub-label">Entregables clave</div>
+    <blockquote class="say">
+      <p>&quot;Para eso tienes:&quot;</p>
+    </blockquote>
+    <ul class="deliverables">
+      <li>Infraestructura montada para tu negocio</li>
+      <li>1 llamada 1:1 mensual conmigo o con Max</li>
+      <li>1 llamada grupal mensual con otros founders</li>
+      <li>Chat privado con el equipo Imperio y los dem&aacute;s miembros</li>
+      <li>Auditor&iacute;a completa de tu stack y acceso a Imperio Digital para tu equipo</li>
+    </ul>
+
+    <div class="sub-label">Garant&iacute;a (risk reversal)</div>
+    <div class="guarantee">
+      <div class="g-icon">&#128737;&#65039;</div>
+      <div class="g-title">Garant&iacute;a 90 d&iacute;as</div>
+      <div class="g-text">&quot;Y regla simple: si cumples el plan y en 90 d&iacute;as no cierras al menos 1 cliente nuevo atribuible a lo que montamos, trabajamos 90 d&iacute;as m&aacute;s contigo, gratis. Eso es nuestra forma de asumir el riesgo nosotros.&quot;</div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: Cierre -->
+  <section class="section" id="s5">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <div class="section-title">Precio + silencio + cierre</div>
+        <div class="section-time">5 - 10 minutos</div>
+      </div>
+    </div>
+
+    <div class="sub-label">Presenta inversi&oacute;n con calma</div>
+    <blockquote class="say">
+      <p>&quot;La inversi&oacute;n es de 1.500 d&oacute;lares al mes, con un compromiso m&iacute;nimo de 6 meses.&quot;</p>
+    </blockquote>
+
+    <div class="price-tag">
+      <div class="amount">$1,500 USD</div>
+      <div class="period">por mes</div>
+      <div class="commitment">Compromiso m&iacute;nimo: 6 meses</div>
+    </div>
+
+    <div class="sub-label">Haz la pregunta y CALLA</div>
+    <blockquote class="say">
+      <p>&quot;&iquest;C&oacute;mo te suena hasta aqu&iacute;?&quot;</p>
+    </blockquote>
+    <p style="text-align:center;color:var(--text-dim);font-size:14px;margin:8px 0">o bien:</p>
+    <blockquote class="say">
+      <p>&quot;&iquest;Ves esto funcionando en tu negocio si lo ejecutamos juntos?&quot;</p>
+    </blockquote>
+
+    <div class="silence">&#128263; SILENCIO. NO RELLENES. DEJAS QUE HABLEN.</div>
+
+    <div class="tip">
+      <span class="tip-icon">&#9888;&#65039;</span>
+      <span><strong>Regla de oro:</strong> El primero que habla despu&eacute;s del precio, pierde. Aguanta el silencio. Ellos van a romperlo.</span>
+    </div>
+  </section>
+
+</main>
+
+<!-- Next section button -->
+<button id="next-btn" onclick="goNext()">
+  Siguiente
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+</button>
+
+<script>
+const sections = ['s0','s1','s2','s3','s4','s5'];
+const sidebarLinks = document.querySelectorAll('.sidebar a');
+const mobileLinks = document.querySelectorAll('.mobile-tabs a');
+const progressBar = document.getElementById('progress-bar');
+
+function updateActive(){
+  let current = sections[0];
+  const scrollPos = window.scrollY + 120;
+  for(const id of sections){
+    const el = document.getElementById(id);
+    if(el && el.offsetTop <= scrollPos) current = id;
+  }
+  sidebarLinks.forEach(a => a.classList.toggle('active', a.getAttribute('href') === '#'+current));
+  mobileLinks.forEach(a => {
+    const isActive = a.getAttribute('href') === '#'+current;
+    a.classList.toggle('active', isActive);
+    if(isActive) a.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  });
+  // progress
+  const docH = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = docH > 0 ? (window.scrollY / docH) * 100 : 0;
+  progressBar.style.width = pct + '%';
+}
+
+function goNext(){
+  const scrollPos = window.scrollY + 120;
+  for(let i = 0; i < sections.length; i++){
+    const el = document.getElementById(sections[i]);
+    if(el && el.offsetTop > scrollPos){
+      el.scrollIntoView({behavior:'smooth'});
+      return;
+    }
+  }
+  // Already at last, go to top
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+window.addEventListener('scroll', updateActive, {passive:true});
+updateActive();
+</script>
+
+</body>
+</html>
