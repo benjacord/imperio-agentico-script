@@ -99,6 +99,29 @@ main{max-width:var(--max-w);margin:0 auto;padding:70px 20px 120px}
 .price-tag .period{font-size:16px;color:var(--text-dim);margin-top:4px}
 .price-tag .commitment{font-size:13px;color:var(--text-dim);margin-top:8px;padding-top:12px;border-top:1px solid #2a2a2a}
 
+/* Objection cards */
+.objection{background:var(--surface);border:1px solid #2a2a2a;border-radius:16px;margin:16px 0;overflow:hidden;transition:border-color .2s}
+.objection:hover{border-color:#555}
+.objection-header{display:flex;align-items:center;gap:12px;padding:18px 22px;cursor:pointer;user-select:none}
+.objection-header .obj-num{font-size:12px;font-weight:800;color:#000;background:#E8723A;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.objection-header .obj-title{font-size:15px;font-weight:700;color:#E8723A;flex:1}
+.objection-header .obj-toggle{font-size:18px;color:var(--text-dim);transition:transform .2s;flex-shrink:0}
+.objection.open .obj-toggle{transform:rotate(180deg)}
+.objection-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.objection.open .objection-body{max-height:2000px}
+.objection-body-inner{padding:0 22px 22px}
+.objection-body-inner .say{margin:8px 0 12px}
+
+/* Conditional logic */
+.condition{background:rgba(232,114,58,0.08);border:1px solid rgba(232,114,58,0.2);border-radius:var(--radius);padding:14px 18px;margin:10px 0;font-size:13px;line-height:1.7}
+.condition .cond-label{font-weight:700;color:#E8723A;margin-bottom:4px}
+.condition .cond-text{color:var(--text-mid)}
+
+/* Footer note */
+.final-note{background:linear-gradient(135deg,var(--surface2),var(--surface));border:1px solid #2a2a2a;border-radius:16px;padding:28px;margin:48px 0 0;text-align:center}
+.final-note .fn-icon{font-size:28px;margin-bottom:10px}
+.final-note .fn-text{font-size:15px;color:var(--text-mid);line-height:1.8;max-width:600px;margin:0 auto}
+
 @media(max-width:600px){
   .section-num{width:42px;height:42px;font-size:22px;border-radius:10px}
   .section-title{font-size:18px}
@@ -120,6 +143,9 @@ main{max-width:var(--max-w);margin:0 auto;padding:70px 20px 120px}
   <a href="#s3">3. Transici&oacute;n</a>
   <a href="#s4">4. Plan</a>
   <a href="#s5">5. Cierre</a>
+  <a href="#s5b">1-10</a>
+  <a href="#s6">6. Operativo</a>
+  <a href="#s7">7. Objeciones</a>
 </nav>
 
 <!-- Desktop sidebar -->
@@ -131,6 +157,9 @@ main{max-width:var(--max-w);margin:0 auto;padding:70px 20px 120px}
   <a href="#s3"><span class="num">3</span>Transici&oacute;n</a>
   <a href="#s4"><span class="num">4</span>Presentar plan</a>
   <a href="#s5"><span class="num">5</span>Precio + cierre</a>
+  <a href="#s5b"><span class="num" style="font-size:9px">1-10</span>T&eacute;cnica 1-10</a>
+  <a href="#s6"><span class="num">6</span>Cierre operativo</a>
+  <a href="#s7"><span class="num">7</span>Objeciones</a>
 </nav>
 
 <main>
@@ -385,6 +414,138 @@ main{max-width:var(--max-w);margin:0 auto;padding:70px 20px 120px}
     <div class="tip">
       <span class="tip-icon">&#9888;&#65039;</span>
       <span><strong>Regla de oro:</strong> El primero que habla despu&eacute;s del precio, pierde. Aguanta el silencio. Ellos van a romperlo.</span>
+    </div>
+  </section>
+
+  <!-- SECTION 5.5: T&eacute;cnica del 1-10 -->
+  <div class="sub-label" style="margin-top:32px;font-size:18px;color:var(--gold);">T&eacute;cnica del 1 al 10</div>
+  <blockquote class="say">
+    <p>&quot;De 1 a 10, &iquest;qu&eacute; tan alineado sientes esto con lo que necesitas ahora mismo?&quot;</p>
+  </blockquote>
+  <blockquote class="say">
+    <p>&quot;&iquest;Qu&eacute; te falta para que sea un 10?&quot;</p>
+  </blockquote>
+  <div class="tip">
+    <span class="tip-icon">&#9888;&#65039;</span>
+    <span>Respondes SOLO a lo que digan. No metas features nuevos.</span>
+  </div>
+
+  <!-- SECTION 6: Cierre operativo -->
+  <section class="section" id="s6">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div>
+        <div class="section-title">Cierre operativo</div>
+        <div class="section-time">Cuando diga que s&iacute;</div>
+      </div>
+    </div>
+
+    <blockquote class="say">
+      <p>&quot;Buen&iacute;simo. El siguiente paso es simple:</p>
+      <p>Te mando ahora mismo el enlace de pago / acuerdo.</p>
+      <p>Una vez est&eacute; listo, te agendamos la sesi&oacute;n de onboarding donde vemos tu stack y definimos los 3-5 agentes prioritarios.</p>
+      <p>Desde ah&iacute;, empezamos el plan de 90 d&iacute;as.&quot;</p>
+    </blockquote>
+
+    <div class="silence">No adornes m&aacute;s. Repite pasos, cobras, onboarding.</div>
+  </section>
+
+  <!-- SECTION 7: Objeciones -->
+  <section class="section" id="s7">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div>
+        <div class="section-title">Objeciones</div>
+        <div class="section-time">Tarjetas de respuesta r&aacute;pida</div>
+      </div>
+    </div>
+
+    <!-- Objeci&oacute;n 1 -->
+    <div class="card" style="border-left:3px solid #e74c3c;margin-bottom:20px;">
+      <div class="sub-label" style="color:#e74c3c;">&ldquo;Est&aacute; caro / no me da el n&uacute;mero&rdquo;</div>
+      <blockquote class="say">
+        <p>&quot;Si este sistema te ayudara a sumar 1-2 clientes m&aacute;s al mes de forma constante, &iquest;se pagar&iacute;a solo o no?&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;T&uacute; me dijiste que un cliente te deja aprox $X. Con 1 cliente nuevo ya cubres el mes. Con 2, tienes margen.&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;Si el ROI es claro, el problema no es el precio, es la decisi&oacute;n. &iquest;Te hace sentido o no para donde quieres ir los pr&oacute;ximos 6-12 meses?&quot;</p>
+      </blockquote>
+    </div>
+
+    <!-- Objeci&oacute;n 2 -->
+    <div class="card" style="border-left:3px solid #e74c3c;margin-bottom:20px;">
+      <div class="sub-label" style="color:#e74c3c;">&ldquo;No tengo tiempo ahora&rdquo;</div>
+      <blockquote class="say">
+        <p>&quot;Te creo, y por eso mismo te propuse 2-4 horas a la semana. Si no tienes ese m&iacute;nimo, no deber&iacute;as entrar.&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;La alternativa es seguir 6-12 meses igual, con las mismas tareas manuales que hoy te comen 20-30 horas al mes.&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;&iquest;Puedes comprometer 2-4 horas/semana 90 d&iacute;as o no? Si no, mejor no entres. Si s&iacute;, entonces el tiempo no es el problema.&quot;</p>
+      </blockquote>
+    </div>
+
+    <!-- Objeci&oacute;n 3 -->
+    <div class="card" style="border-left:3px solid #e74c3c;margin-bottom:20px;">
+      <div class="sub-label" style="color:#e74c3c;">&ldquo;Lo tengo que hablar con mi socio/pareja&rdquo;</div>
+      <blockquote class="say">
+        <p>&quot;Perfecto, no quiero que metas a nadie a la mala.&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;Pero seamos directos: de 1 a 10, &iquest;qu&eacute; tan convencido est&aacute;s T&Uacute; de que esto es lo que tu negocio necesita?&quot;</p>
+      </blockquote>
+      <div class="tip">
+        <span class="tip-icon">&#128161;</span>
+        <span>Si dice &lt;8: &quot;Ok, entonces no es un tema de tu socio, es que a ti no te cierra algo. Hablemos de eso primero.&quot;<br>Si dice 8-10: &quot;Entonces agendamos una llamada de 15 min con los tres, yo repaso el plan en 5 y decidimos ah&iacute;.&quot;</span>
+      </div>
+    </div>
+
+    <!-- Objeci&oacute;n 4 -->
+    <div class="card" style="border-left:3px solid #e74c3c;margin-bottom:20px;">
+      <div class="sub-label" style="color:#e74c3c;">&ldquo;Ya prob&eacute; automatizaciones y no me funcionaron&rdquo;</div>
+      <blockquote class="say">
+        <p>&quot;Lo que compraste antes, &iquest;era un curso masivo o alguien mont&oacute; sistemas contigo, sobre tu stack real?&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;Ac&aacute; no te vendo videos. Tomamos tu CRM, tus funnels, tus procesos, montamos agents encima y los dejamos en producci&oacute;n.&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;Si cumples el plan y en 90 d&iacute;as no hay al menos 1 cliente nuevo atribuible a lo que montamos, trabajamos 90 d&iacute;as m&aacute;s gratis. Si yo no confiara en el veh&iacute;culo, jam&aacute;s ofrecer&iacute;a eso.&quot;</p>
+      </blockquote>
+    </div>
+
+    <!-- Objeci&oacute;n 5 -->
+    <div class="card" style="border-left:3px solid #e74c3c;margin-bottom:20px;">
+      <div class="sub-label" style="color:#e74c3c;">&ldquo;No s&eacute; si soy lo suficientemente t&eacute;cnico&rdquo;</div>
+      <blockquote class="say">
+        <p>&quot;No necesitas ser t&eacute;cnico, necesitas ser el due&ntilde;o del negocio. La parte t&eacute;cnica la ponemos nosotros.&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;Tu pega es saber qu&eacute; procesos importan. La nuestra es convertir eso en agentes. Si no sabes qu&eacute; quieres, no calzas. Si sabes qu&eacute; quieres, no necesitas c&oacute;digo.&quot;</p>
+      </blockquote>
+    </div>
+
+    <!-- Objeci&oacute;n 6 -->
+    <div class="card" style="border-left:3px solid #e74c3c;margin-bottom:20px;">
+      <div class="sub-label" style="color:#e74c3c;">&ldquo;D&eacute;jame pensarlo / te aviso&rdquo;</div>
+      <blockquote class="say">
+        <p>&quot;S&uacute;per. Y para serte sincero, cuando alguien dice 'lo pienso', 9 de 10 veces es un no educado. &iquest;Te parece si hablamos como adultos y me dices qu&eacute; parte no te cuadra?&quot;</p>
+      </blockquote>
+      <blockquote class="say">
+        <p>&quot;Si el precio fuera 0, &iquest;entrar&iacute;as?&quot;</p>
+      </blockquote>
+      <div class="tip">
+        <span class="tip-icon">&#128161;</span>
+        <span>Si dice no: no ve valor, hiciste mal el diagn&oacute;stico.<br>Si dice s&iacute;: es precio/miedo, vuelves a ROI/garant&iacute;a.</span>
+      </div>
+    </div>
+
+    <!-- Nota final -->
+    <div style="background:#1a1a1a;border:1px solid var(--gold);border-radius:12px;padding:24px;margin-top:32px;text-align:center;">
+      <p style="color:var(--gold);font-size:16px;line-height:1.6;margin:0;">Tu trabajo en la call no es convencer. Es: <strong>1)</strong> diagnosticar bien, <strong>2)</strong> mostrarles un futuro mejor con agentes, <strong>3)</strong> pedir una decisi&oacute;n clara. El que est&aacute; en 9/10 entra casi solo. Tu gui&oacute;n solo evita que te los farrees.</p>
     </div>
   </section>
 
